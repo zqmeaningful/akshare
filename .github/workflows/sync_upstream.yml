@@ -1,0 +1,24 @@
+name: Sync Upstream
+on:
+  schedule:
+    - cron: '0 * * * *' # 每小时自动检查一次原作者更新
+  workflow_dispatch:    # 允许手动点击按钮触发同步
+
+jobs:
+  sync_latest_from_upstream:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout target repo
+        uses: actions/checkout@v3
+        with:
+          ref: main             # 你的分支名，可能是 master
+          fetch-depth: 0
+
+      - name: Sync upstream changes
+        id: sync
+        uses: aieri/sync-upstream-repo@v1.3.0
+        with:
+          upstream_repo: https://github.com/akfamily/akshare.git
+          upstream_branch: master
+          downstream_branch: main
+          token: ${{ secrets.GITHUB_TOKEN }}
