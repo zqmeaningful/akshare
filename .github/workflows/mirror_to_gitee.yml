@@ -1,0 +1,19 @@
+on:
+  workflow_run:
+    workflows: ["Sync Upstream"] # 当上面的同步原作者任务完成后触发
+    types:
+      - completed
+
+jobs:
+  to_gitee:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror to Gitee
+        uses: Yikun/hub-mirror-action@main
+        with:
+          src: github/zqmeaningful
+          dst: gitee/zqmeaningful
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          static_list: "akshare"
+          force_update: true
